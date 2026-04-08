@@ -1,0 +1,116 @@
+body{
+    background-color:antiquewhite;
+}
+*{
+    margin:0;
+    padding:0;
+}
+nav{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+nav ul{
+    display:flex;
+    list-style-type:none;
+    height:90px;
+    background-color:black;
+    color:white;
+    align-items: center;
+    font-weight:bolder;
+}
+nav ul li{
+    padding:0 12px;
+}
+.brand img{
+    width:44px;
+    padding:0 8px;
+}
+.brand {
+    display:flex;
+    align-items:center;
+    font-weight:bolder;
+    font-size:1.3rem;
+}
+.container{
+    min-height:72vh;
+    font-size:10px;
+    background-color:black;
+    color:white;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    display:flex;
+    margin:23px auto;
+    width:70%;
+    border-radius:12px;
+    padding:10px;
+    background-image: url("https://wallpapers.com/images/hd/girl-with-black-headphone-a09f6yk2y3h937yo.jpg");
+    background-repeat:no-repeat;
+    background-size:cover;
+    background-position:center 80%;
+}
+.bottom{
+    position:sticky;
+    height:140px; 
+    background-color:black;
+    bottom:0;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction: column;
+    
+}
+#myProgressBar{
+    width:80vw;
+    cursor:pointer;
+
+}
+.icons{
+    font-size:30px;
+    color:White;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    margin-top: 10px;
+}
+.icons i{
+    cursor:pointer;
+}
+.songItem{
+    height:50px;
+    display:flex;
+    background-color:white;
+    color:black;
+    margin:12px 0;
+    justify-content:space-between;
+    align-items:center;
+    border-radius:23px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight:bold;
+    font-size:20px;
+
+}
+.songItem img{
+width:43px;
+height:40px;
+margin:0 23px;
+object-fit:cover;
+border-radius:23px;
+}
+.timestamp{
+    margin:0 23px;
+}
+.timestamp i{
+    cursor:pointer;
+}
+.SongItemsContainer{
+    margin-top:74px;
+}
+.songInfo{
+    position:absolute;
+    left:10vw;
+    display:flex;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+.songInfo img{
+    opacity:0;
+    transition:opacity 0.4s ease-in;
+}
