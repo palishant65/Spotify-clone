@@ -2,6 +2,7 @@ console.log("Welcome to spotify");
 //Initialize the Variables
 let songIndex=0;
 let audioElement=new Audio("songs/Sailor_song.mp3");
+audioElement.preload = 'auto';
 let masterPlay=document.getElementById('masterPlay');
 let myProgressBar=document.getElementById('myProgressBar');
 let gif=document.getElementById("gif");
@@ -14,21 +15,36 @@ let songs = [
   {songName: "Robbery", filePath: "songs/1 (2).mp3", coverPath: "covers/3.jpg"},
   {songName: "Legends", filePath: "songs/1 (3).mp3", coverPath: "covers/4.jpg"},
   {songName: "Come & Go", filePath: "songs/1 (4).mp3", coverPath: "covers/5.jpg"},
-  {songName: "sad", filePath: "songs/1 (5).mp3", coverPath: "covers/6.jpg"},
-  {songName: "Bad Boy", filePath: "songs/1 (6).mp3", coverPath: "covers/7.jpg"},
-  {songName: "Moonlight", filePath: "songs/1 (8).mp3", coverPath: "covers/8.jpg"},
-  {songName: "Changes", filePath: "songs/1 (9).mp3", coverPath: "covers/9.jpg"},
-  {songName: "Jocelyn Flores", filePath: "songs/1 (10).mp3", coverPath: "covers/10.jpg"}
+  {songName: "sad", filePath: "songs/1(5).mp3", coverPath: "covers/6.jpg"},
+  {songName: "Bad Boy", filePath: "songs/1(6).mp3", coverPath: "covers/7.jpg"},
+  {songName: "Moonlight", filePath: "songs/1(7).mp3", coverPath: "covers/8.jpg"},
+  {songName: "Changes", filePath: "songs/1(8).mp3", coverPath: "covers/9.jpg"},
+  {songName: "Jocelyn Flores", filePath: "songs/1(9).mp3", coverPath: "covers/10.jpg"}
 ];
 songItems.forEach((element, i) => {
     element.getElementsByTagName("img")[0].src = songs[i].coverPath;
     element.getElementsByClassName("songName")[0].innerText = songs[i].songName;
 });
+audioElement.addEventListener('error', function(e) {
+    console.error('Audio load error for song:', songs[songIndex].songName, e);
+    alert('Failed to load song: ' + songs[songIndex].songName + '. Please check the file path and format.');
+});
+audioElement.addEventListener('loadeddata', function() {
+    console.log('Audio data loaded for:', songs[songIndex].songName);
+});
+audioElement.addEventListener('canplaythrough', function() {
+    console.log('Song can play through:', songs[songIndex].songName);
+});
 //audioElement.play
 //handle play/pause click
 masterPlay.addEventListener("click",()=>{
     if(audioElement.paused || audioElement.currentTime<=0){
-        audioElement.play();
+        audioElement.play().then(() => {
+            console.log('Playing');
+        }).catch(error => {
+            console.error('Playback failed:', error);
+            alert('Playback failed for: ' + songs[songIndex].songName);
+        });
         masterPlay.classList.remove("fa-play-circle");
         masterPlay.classList.add("fa-pause-circle");
         makeAllPlays();
@@ -63,36 +79,37 @@ const makeAllPlays=()=>{
 
 })
 }
-Array.from(document.getElementsByClassName("songItemPlay")).forEach((element)=>{
-    element.addEventListener("click",(e)=>{
-        console.log(e.target);
-        let clickedIndex=parseInt(e.target.id);
-        if(songIndex==clickedIndex && !audioElement.paused){
+songItems.forEach((element, i) => {
+    element.addEventListener("click", (e) => {
+        if (songIndex == i && !audioElement.paused) {
+            // pause
             audioElement.pause();
-            e.target.classList.remove("fa-pause-circle");
-            e.target.classList.add("fa-play-circle");
             masterPlay.classList.remove("fa-pause-circle");
             masterPlay.classList.add("fa-play-circle");
-            gif.style.opacity=0;
+            element.querySelector('.songItemPlay').classList.remove("fa-pause-circle");
+            element.querySelector('.songItemPlay').classList.add("fa-play-circle");
+            gif.style.opacity = 0;
+        } else {
+            makeAllPlays();
+            songIndex = i;
+            audioElement.src = songs[songIndex].filePath;
+            masterSongName.innerText = songs[songIndex].songName;
+            audioElement.currentTime = 0;
+            console.log('Loading song:', songs[i].filePath);
+            audioElement.play().then(() => {
+                isManualChange = false;
+                console.log('Song playing:', songs[songIndex].songName);
+            }).catch(error => {
+                console.error('Playback failed for:', songs[songIndex].songName, error);
+                alert('Failed to play song: ' + songs[songIndex].songName + '. Check file or format.');
+            });
+            gif.style.opacity = 1;
+            masterPlay.classList.remove("fa-play-circle");
+            masterPlay.classList.add("fa-pause-circle");
+            element.querySelector('.songItemPlay').classList.remove("fa-play-circle");
+            element.querySelector('.songItemPlay').classList.add("fa-pause-circle");
         }
-        else{
-        makeAllPlays();
-        songIndex=clickedIndex;
-        e.target.classList.remove("fa-play-circle");
-        e.target.classList.add("fa-pause-circle");
-        audioElement.src=songs[songIndex].filePath;
-        masterSongName.innerText=songs[songIndex].songName;
-        audioElement.currentTime=0;
-        audioElement.play().then(()=>{
-        isManualChange=false;
     });
-
-        gif.style.opacity=1;
-        masterPlay.classList.remove("fa-play-circle");
-        masterPlay.classList.add("fa-pause-circle");
-        }
-    });
-
 });
 audioElement.addEventListener("ended", () => {
 
@@ -108,6 +125,8 @@ audioElement.addEventListener("ended", () => {
     audioElement.currentTime = 0;
     audioElement.play().then(()=>{
         isManualChange=false;
+    }).catch(error => {
+        console.error('Auto-play failed for:', songs[songIndex].songName, error);
     });
 
     makeAllPlays();
@@ -133,7 +152,9 @@ previous.addEventListener("click", () => {
     audioElement.src = songs[songIndex].filePath;
     masterSongName.innerText = songs[songIndex].songName;
     audioElement.currentTime = 0;
-    audioElement.play();
+    audioElement.play().catch(error => {
+        console.error('Previous play failed:', error);
+    });
 
     makeAllPlays();
 
@@ -159,6 +180,8 @@ next.addEventListener("click", () => {
         audioElement.currentTime = 0;
         audioElement.play().then(()=>{
         isManualChange=false;
+    }).catch(error => {
+        console.error('Next play failed:', error);
     });
 
     makeAllPlays();

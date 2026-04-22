@@ -1,5 +1,6 @@
 body{
     background-color:antiquewhite;
+    padding-bottom: 140px;
 }
 *{
     margin:0;
@@ -47,7 +48,7 @@ nav ul li{
     background-position:center 80%;
 }
 .bottom{
-    position:sticky;
+    position:fixed;
     height:140px; 
     background-color:black;
     bottom:0;
@@ -56,6 +57,8 @@ nav ul li{
     justify-content:center;
     align-items:center;
     flex-direction: column;
+    width: 100%;
+    left: 0;
     
 }
 #myProgressBar{
